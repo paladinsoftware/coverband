@@ -71,7 +71,7 @@ module Coverband
       end
 
       def show
-        html = s3.get_object(bucket: Coverband.configuration.s3_bucket, key: 'coverband/index.html').body.read
+        html = s3.get_object(bucket: Coverband.configuration.s3_bucket, key: object_key).body.read
         # HACK: the static HTML assets to link to the path where this was mounted
         html = html.gsub("src='", "src='#{base_path}")
         html = html.gsub("href='", "href='#{base_path}")
@@ -118,6 +118,10 @@ module Coverband
 
       private
 
+      def object_key
+        "#{Coverband.configuration.s3_bucket_prefix}coverband/index.html"
+      end
+
       def button(url, title)
         button = "<form action='#{url}' method='post'>"
         button += "<button type='submit'>#{title}</button>"
@@ -135,7 +139,7 @@ module Coverband
 
       def s3
         begin
-          require 'aws-sdk'
+          require 'aws-sdk-s3'
         rescue StandardError
           Coverband.configuration.logger.error "coverband requires 'aws-sdk' in order use S3ReportWriter."
           return

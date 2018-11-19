@@ -442,6 +442,7 @@ If you add some additional Coverband configuration your coverage html report wil
 ```
   # configure S3 integration
   config.s3_bucket = 'coverband-demo'
+  config.s3_bucket_prefix = 'prodction/'
   config.s3_region = 'us-east-1'
   config.s3_access_key_id = ENV['AWS_ACCESS_KEY_ID']
   config.s3_secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']

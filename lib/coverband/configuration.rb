@@ -10,7 +10,7 @@ module Coverband
                   :safe_reload_files, :background_reporting_enabled,
                   :background_reporting_sleep_seconds, :test_env
 
-    attr_writer :logger, :s3_region, :s3_bucket, :s3_access_key_id, :s3_secret_access_key
+    attr_writer :logger, :s3_region, :s3_bucket, :s3_bucket_prefix, :s3_access_key_id, :s3_secret_access_key
 
     def initialize
       @root = Dir.pwd
@@ -26,6 +26,7 @@ module Coverband
       # TODO: should we push these to adapter configs
       @s3_region = nil
       @s3_bucket = nil
+      @s3_bucket_prefix = nil
       @s3_access_key_id = nil
       @s3_secret_access_key = nil
       @redis_namespace = nil
@@ -36,6 +37,10 @@ module Coverband
 
     def logger
       @logger ||= Logger.new(STDOUT)
+    end
+
+    def s3_bucket_prefix
+      @s3_bucket_prefix || ENV['AWS_BUCKET_PREFIX']
     end
 
     def s3_bucket

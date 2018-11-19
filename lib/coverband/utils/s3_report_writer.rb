@@ -11,11 +11,12 @@ module Coverband
     class S3ReportWriter
       def initialize(bucket_name, options = {})
         @bucket_name = bucket_name
+        @bucket_prefix = options[:bucket_prefix]
         @region = options[:region]
         @access_key_id = options[:access_key_id]
         @secret_access_key = options[:secret_access_key]
         begin
-          require 'aws-sdk'
+          require 'aws-sdk-s3'
         rescue StandardError
           err_msg = 'coverband requires aws-sdk in order use S3ReportWriter.'
           Coverband.configuration.logger.error err_msg
@@ -33,11 +34,15 @@ module Coverband
         version = Gem::Specification.find_by_name('simplecov-html').version.version
         File.read("#{SimpleCov.coverage_dir}/index.html").gsub("./assets/#{version}/", '')
       rescue StandardError
-        File.read("#{SimpleCov.coverage_dir}/index.html").to_s.gsub('./assets/0.10.1/', '')
+        File.read("#{SimpleCov.coverage_dir}/index.html").to_s.gsub('./assets/0.10.2/', '')
       end
 
       def object
-        bucket.object('coverband/index.html')
+        bucket.object(object_key)
+      end
+
+      def object_key
+        "#{@bucket_prefix}coverband/index.html"
       end
 
       def s3

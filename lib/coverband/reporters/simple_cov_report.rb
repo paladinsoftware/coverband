@@ -41,7 +41,8 @@ module Coverband
         s3_writer_options = {
           region: Coverband.configuration.s3_region,
           access_key_id: Coverband.configuration.s3_access_key_id,
-          secret_access_key: Coverband.configuration.s3_secret_access_key
+          secret_access_key: Coverband.configuration.s3_secret_access_key,
+          bucket_prefix: Coverband.configuration.s3_bucket_prefix
         }
         Coverband::Utils::S3ReportWriter.new(Coverband.configuration.s3_bucket,
                                                 s3_writer_options).persist! if Coverband.configuration.s3_bucket
